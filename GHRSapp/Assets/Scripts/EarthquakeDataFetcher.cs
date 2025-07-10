@@ -97,12 +97,20 @@ public class EarthquakeDataFetcher : MonoBehaviour
 
     IEnumerator AdjustContentSize()
     {
-        // waits until text is updated
         yield return new WaitForEndOfFrame();
-        // defines size of the content in a 2 dimensional vector . size delta identifies size
-        contentTransform.sizeDelta = new Vector2(contentTransform.sizeDelta.x,earthquakeText.preferredHeight);
-        scrollRect.verticalNormalizedPosition = 1f;
+
+        float textHeight = earthquakeText.preferredHeight;
+        float scrollViewHeight = scrollRect.GetComponent<RectTransform>().rect.height;
+
+        // Force content to be either as tall as the text or at least slightly larger than the viewport
+        float buffer = 10f; // Ensures overflow exists for scrolling
+        float finalHeight = Mathf.Max(textHeight, scrollViewHeight + buffer);
+
+        contentTransform.sizeDelta = new Vector2(contentTransform.sizeDelta.x, finalHeight);
+
+        Debug.Log($"Text: {textHeight}, Viewport: {scrollViewHeight}, Final Height: {finalHeight}");
     }
+
 
 }
 // Create a new class outside of C
